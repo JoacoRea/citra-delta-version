@@ -24,6 +24,10 @@ import org.citra.emu.utils.NetPlayManager;
 import org.citra.emu.utils.WebRequestHandler;
 
 public final class NativeLibrary {
+    
+    public static native void SetTopScreenSurface(Surface surface);
+
+    public static native void SetScreenShareMode(boolean enabled);
 
     static {
         System.loadLibrary("main");
