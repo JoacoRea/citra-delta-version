@@ -1,5 +1,7 @@
 package org.citra.emu.ui;
 
+import android.hardware.display.DisplayManager;
+import android.view.Display;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -38,6 +40,24 @@ import org.citra.emu.settings.model.Setting;
 import org.citra.emu.settings.model.SettingSection;
 import org.citra.emu.utils.ControllerMappingHelper;
 import org.citra.emu.utils.CitraDirectory;
+
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_emulation);
+    // … existing code …
+
+    // Detect external displays (e.g. a TV) for screen sharing.
+    DisplayManager displayManager = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
+    Display[] presentationDisplays = displayManager.getDisplays(DisplayManager.DISPLAY_CATEGORY_PRESENTATION);
+    if (presentationDisplays != null && presentationDisplays.length > 0) {
+        // Launch the presentation on the first external display.
+        TopScreenPresentation topPresentation = new TopScreenPresentation(this, presentationDisplays[0]);
+        topPresentation.show();
+        // Inform the native library that screen share mode is active.
+        NativeLibrary.SetScreenShareMode(true);
+    }
+}
 
 public final class EmulationActivity extends AppCompatActivity {
     public static final String EXTRA_GAME_ID = "GameId";
